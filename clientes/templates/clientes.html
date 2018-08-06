@@ -25,9 +25,9 @@
 			{% for cliente in clientes %}
                 <tr>
                     <td>{{ cliente.cif }}</td>
-                    <td>{{ clientes.razon_social }}</td>
-                    <td>{{ clientes.direccion }}</td>
-                    {% if clientes.estado %}
+                    <td>{{ cliente.razon_social }}</td>
+                    <td>{{ cliente.direccion }}</td>
+                    {% if cliente.estado %}
                     <td>ACTIVO</td>
                     {% else %}
                     <td>INACTIVO</td>
