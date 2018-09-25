@@ -11,18 +11,18 @@ from django.http.response import HttpResponseRedirect
 
 class ListadoClientes(ListView):
     model = Cliente
-    template_name = 'clientes.html'
+    template_name = 'clientes_listado.html'
     context_object_name = 'clientes'
 
 class CrearCliente(CreateView):
     model = Cliente
-    template_name = 'cliente.html'
+    template_name = 'cliente_nuevo.html'
     form_class = ClienteForm
     success_url = reverse_lazy('clientes:listado_clientes')
 
 class ModificarCliente(UpdateView):
     model = Cliente
-    template_name = 'cliente.html'
+    template_name = 'cliente_modificar.html'
     form_class = ClienteForm
     success_url = reverse_lazy('clientes:listado_clientes')
 

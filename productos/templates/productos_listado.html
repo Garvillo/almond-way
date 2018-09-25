@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% block cuerpo %}
-<h3>Productos</h3>
+<h2>Silos</h2>
 <div class="row">
 	<div class="col-lg-10">
-		<a onclick="return abrir_modal('{% url 'productos:crear_producto' %}','Productos / Nuevo')" class="btn btn-primary">
-			Crear
+		<a onclick="return abrir_modal('{% url 'productos:crear_producto' %}','Productos / Nuevo')" class="btn btn-success">
+			Crear nuevo silo
 		</a>
 	</div>
 </div>
@@ -14,11 +14,11 @@
 		<table id="tabla" class="display" cellspacing="0" width="100%">
 			<thead>
 				<tr>
-					<th class="text-center">DESCRIPCION</th>
-					<th class="text-center">MARCA</th>
-					<th class="text-center">PRECIO</th>
-					<th class="text-center">ESTADO</th>
-					<th class="text-center">ACCIONES</th>
+					<th class="text-left">DESCRIPCION</th>
+					<th class="text-left">MARCA</th>
+					<th class="text-left">PRECIO</th>
+					<th class="text-left">ESTADO</th>
+					<th class="text-left">ACCIONES</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -32,12 +32,12 @@
                     {% else %}
                     <td>INACTIVO</td>
                     {% endif %}
-                    <td class="text-center">
+                    <td class="text-left">
                         <a onclick="return abrir_modal('{% url 'productos:detalle_producto' producto.pk %}','Productos / {{ producto.descripcion }}')" class="btn">
-                            <span class="glyphicon glyphicon-eye-open"></span>
+							<span class="btn btn-info btn-sm">ver</span>
                         </a>
                         <a onclick="return abrir_modal('{% url 'productos:modificar_producto' producto.pk %}','Productos / {{ producto.descripcion }}')" class="btn">
-                            <span class="glyphicon glyphicon-edit"></span>
+							<span class="btn btn-warning btn-sm">modificar</span>
                         </a>
                     </td>
 				</tr>

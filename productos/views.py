@@ -10,7 +10,7 @@ from django.http.response import HttpResponseRedirect
 
 class ListadoProductos(ListView):
     model = Producto
-    template_name = 'productos.html'
+    template_name = 'productos_listado.html'
     context_object_name = 'productos'
 
 class ListadoProveedores(ListView):
@@ -24,7 +24,7 @@ class ListadoCompras(ListView):
     context_object_name = 'compras'
 
 class CrearProducto(CreateView):
-    template_name = 'producto.html'
+    template_name = 'producto_nuevo.html'
     form_class = ProductoForm
     success_url = reverse_lazy('productos:listado_productos')
 
@@ -35,7 +35,7 @@ class CrearProveedor(CreateView):
 
 class ModificarProducto(UpdateView):
     model = Producto
-    template_name = 'producto.html'
+    template_name = 'producto_modificar.html'
     form_class = ProductoForm
     success_url = reverse_lazy('productos:listado_productos')
 

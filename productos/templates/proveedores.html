@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% block cuerpo %}
-<h3>Proveedores</h3>
+<h2>Proveedores</h2>
 <div class="row">
 	<div class="col-lg-10">
-		<a onclick="return abrir_modal('{% url 'productos:crear_proveedor' %}')" class="btn btn-primary">
-			Crear
+		<a onclick="return abrir_modal('{% url 'productos:crear_proveedor' %}')" class="btn btn-success">
+			Crear nuevo proveedor
 		</a>
 	</div>
 </div>
@@ -14,11 +14,11 @@
 		<table id="tabla" class="display" cellspacing="0" width="100%">
 			<thead>
 				<tr>
-					<th class="text-center">RUC</th>
-					<th class="text-center">RAZON SOCIAL</th>
-					<th class="text-center">DIRECCION</th>
-					<th class="text-center">ESTADO</th>
-					<th class="text-center">ACCIONES</th>
+					<th class="text-left">DNI/DIF</th>
+					<th class="text-left">RAZON SOCIAL</th>
+					<th class="text-left">DIRECCION</th>
+					<th class="text-left">ESTADO</th>
+					<th class="text-left">ACCIONES</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -34,10 +34,10 @@
                     {% endif %}
                     <td class="text-center">
                         <a onclick="return abrir_modal('{% url 'productos:detalle_proveedor' proveedor.pk %}')" class="btn">
-                            <span class="glyphicon glyphicon-eye-open"></span>
+							<span class="btn btn-info btn-sm">ver</span>
                         </a>
                         <a onclick="return abrir_modal('{% url 'productos:modificar_proveedor' proveedor.pk %}')" class="btn">
-                            <span class="glyphicon glyphicon-edit"></span>
+							<span class="btn btn-warning btn-sm">modificar</span>
                         </a>
                     </td>
 				</tr>

@@ -1,24 +1,30 @@
 {% extends "base.html" %}
 {% block cuerpo %}
-<h3>Clientes</h3>
+
+<h2>Clientes</h2>
+
 <div class="row">
 	<div class="col-lg-10">
 		<a onclick="return abrir_modal('{% url 'clientes:crear_cliente' %}')" class="btn btn-success">
 			Crear nuevo cliente
 		</a>
+		<a  class="btn btn-primary">
+			Comprobar listado morosos*
+		</a>
 	</div>
 </div>
-<hr/>
+<hr>
+
 <div class="row">
 	<div class="col-lg-12">
 		<table id="tabla" class="display" cellspacing="0" width="100%">
 			<thead>
 				<tr>
-					<th class="text-center">CIF</th>
-					<th class="text-center">RAZON SOCIAL</th>
-					<th class="text-center">DIRECCION</th>
-					<th class="text-center">ESTADO</th>
-					<th class="text-center">ACCIONES</th>
+					<th class="text-left">CIF</th>
+					<th class="text-left">RAZON SOCIAL</th>
+					<th class="text-left">DIRECCION</th>
+					<th class="text-left">ESTADO</th>
+					<th class="text-left">ACCIONES</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -32,13 +38,15 @@
                     {% else %}
                     <td>INACTIVO</td>
                     {% endif %}
-                    <td class="text-center">
-                        <a onclick="return abrir_modal('{% url 'clientes:detalle_cliente' cliente.pk %}')" class="btn">
-                            <span class="glyphicon glyphicon-eye-open"></span>
-                        </a>
-                        <a onclick="return abrir_modal('{% url 'clientes:modificar_cliente' cliente.pk %}')" class="btn">
-                            <span class="glyphicon glyphicon-edit"></span>
-                        </a>
+                    <td class="text-left">
+                        <a onclick="return abrir_modal('{% url 'clientes:detalle_cliente' cliente.pk %}')">
+						<!--<span class="glyphicon glyphicon-eye-open"></span>-->
+							<span class="btn btn-info btn-sm">ver</span>
+						</a>
+						<a onclick="return abrir_modal('{% url 'clientes:modificar_cliente' cliente.pk %}')" class="btn">
+							<!--<span class="glyphicon glyphicon-edit"></span>-->
+							<span class="btn btn-warning btn-sm">modificar</span>
+						</a>
                     </td>
 				</tr>
 			{% endfor %}
