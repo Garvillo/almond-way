@@ -16,5 +16,7 @@ urlpatterns = [
     url(r'^crear_compra/$', CrearCompra.as_view(), name="crear_compra"),
     url(r'^modificar_compra/(?P<pk>.+)/$',ModificarCompra.as_view(), name="modificar_compra"),
     url(r'^compras/$', ListadoCompras.as_view(), name="listado_compras"),
+   # url(r'^imprimir/(?P<pk>.+)/$', Html_to_pdf_view.as_view(), name="imprimir"),
+
 
 ]

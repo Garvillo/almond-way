@@ -7,6 +7,11 @@ from .models import Producto, Proveedor, Compra, DetalleCompra
 from django.urls import reverse_lazy
 from django.views.generic.detail import DetailView
 from django.http.response import HttpResponseRedirect
+#for print pdf
+from django.core.files.storage import FileSystemStorage
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from weasyprint import HTML
 
 class ListadoProductos(ListView):
     model = Producto
@@ -130,3 +135,24 @@ class CrearCompra(CreateView):
     def form_invalid(self, form, detalle_compra_form_set):
         return self.render_to_response(self.get_context_data(form=form,
                                                              detalle_compra_form_set = detalle_compra_form_set))
+
+'''
+class Html_to_pdf_view(Request):
+    model = Proveedor
+    template_name = 'detalle_proveedor.html'
+    #model=
+    paragraphs = ['first paragraph', 'second paragraph', 'third paragraph']
+    html_string = render_to_string('detalle_proveedor.html', {'paragraphs': paragraphs})
+
+    html = HTML(string=html_string)
+    html.write_pdf(target='/tmp/mypdf.pdf')
+
+    fs = FileSystemStorage('/tmp')
+    with fs.open('mypdf.pdf') as pdf:
+        response = HttpResponse(pdf, content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="mypdf.pdf"'
+        #return response
+
+        #return response
+'''
+#sofia

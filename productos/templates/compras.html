@@ -6,6 +6,7 @@
 		<a href="{% url 'productos:crear_compra' %}" class="btn btn-primary">
 			Crear
 		</a>
+
 	</div>
 </div>
 <hr/>
@@ -25,12 +26,15 @@
                     <td>{{ compra.proveedor }}</td>
                     <td>{{ compra.fecha }}</td>
                     <td class="text-center">
-                        <a href="#" class="btn">
+                        <!--<a href="#" class="btn">
                             <span class="glyphicon glyphicon-eye-open"></span>
+                        </a>-->
+                        <a href="{% url 'productos:modificar_compra' compra.pk %}" class="btn btn-warning btn-sm">
+							modificar
                         </a>
-                        <a href="{% url 'productos:modificar_compra' compra.pk %}" class="btn">
-                            <span class="glyphicon glyphicon-edit"></span>
-                        </a>
+						<a href="#" class="btn btn-primary">
+							imprimir*
+						</a>
                     </td>
 				</tr>
 			{% endfor %}
