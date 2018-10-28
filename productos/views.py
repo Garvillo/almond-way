@@ -11,7 +11,7 @@ from django.http.response import HttpResponseRedirect
 from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse
 from django.template.loader import render_to_string
-from weasyprint import HTML
+#from weasyprint import HTML
 
 class ListadoProductos(ListView):
     model = Producto
