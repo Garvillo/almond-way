@@ -3,5 +3,8 @@ __pycache__
 myvenv
 .DS_Store
 db.sqlite3
+<<<<<<< HEAD
 .git
 .idea
+=======
+>>>>>>> 40df04ae08f4988498053925e4f59095a815ea55
