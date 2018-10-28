@@ -25,7 +25,7 @@ SECRET_KEY = '#2&&ncj8a0kwsc0%uy-x82+2iz4_qv+ip@y5u_zva3_ys(6y6!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['rivazo.pythonanywhere.com']
 
 
 # Application definition
