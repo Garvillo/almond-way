@@ -8,7 +8,7 @@ from .views import ListadoProductos, CrearProducto, ModificarProducto, DetallePr
 app_name = 'productos'
 
 urlpatterns = [
-    url(r'^', ListadoProductos.as_view(), name="listado_productos"),
+    url(r'^silos', ListadoProductos.as_view(), name="listado_productos"),
     url(r'^proveedores/$', ListadoProveedores.as_view(), name="listado_proveedores"),
     url(r'^crear_producto/$', CrearProducto.as_view(), name="crear_producto"),
     url(r'^modificar_producto/(?P<pk>.+)/$',ModificarProducto.as_view(), name="modificar_producto"),
