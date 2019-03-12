@@ -15,13 +15,13 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-from django.contrib.auth import views as auth_views
+
 from django.contrib.auth.views import LoginView, LogoutView
 from . import views
 
 urlpatterns = [
 
-    #url(r'^login/$', auth_views.login, {'template_name': 'login.html'}, name='login'),
+
     url(r'^login/', LoginView.as_view(template_name='login.html'), name="login"),
     url(r'^logout/', LogoutView.as_view(template_name='login.html'), name="logout"),
     url(r'^admin/', admin.site.urls),
