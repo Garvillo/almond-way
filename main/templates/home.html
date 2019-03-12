@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Almond Way</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/jquery.dataTables.min.css'  %}"/>
+    <script type="text/javascript" src="{% static 'js/jquery.js' %}" charset="UTF-8"></script>
+    <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}" charset="UTF-8"></script>
+    <script type="text/javascript" src="{% static 'js/jquery-ui.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+</head>
+<body>
+<div id="page-wrapper">
+
+    {% if user.is_authenticated %}
+    <nav class="navbar navbar-inverse">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="home">Almond Way</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="{% url 'productos:listado_productos' %}">Silos</a>
+                </li>
+                <li>
+                    <a href="{% url 'productos:listado_proveedores' %}">Proveedores</a>
+                </li>
+                <li>
+                    <a href="{% url 'clientes:listado_clientes' %}">Clientes</a>
+                </li>
+                <li>
+                    <a href="{% url 'productos:listado_compras' %}">Facturas de Compra</a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li ><a href="{% url 'logout' %}">Bienvenido/a {{ user.username }}!  Salir</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    {% endif %}
+
+    <div class="container">
+        <!-- Main jumbotron for a primary marketing message or call to action -->
+        <div class="jumbotron">
+            <div class="container">
+                <h2>Panel de mando</h2>
+                <p>Que datos de negocio o informacion nos gustaria ver aqui nada mas entrar a la aplicación  </p>
+                <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- Example row of columns -->
+            <div class="row">
+                <div class="col-md-4">
+                    <h2>Panel</h2>
+                    <p>Pequeño panel de mando, aquí podemos poner cosas como un vistazo general de los silos o facturacion total de este mes.
+                        Preguntarnos que datos nos gustaria ver en la aplicación nada mas entrar.
+                   </p>
+                    <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+                </div>
+                <div class="col-md-4">
+                    <h2>Notas</h2>
+                    <p>Se me ocurre tambien un pequeño gestor de notas, que sea facil escribirlas y eliminarlas. p.e, "No olvides a primera hora terminar la factura de Juan y enviarla a la asesoria"
+                    <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+                </div>
+                <div class="col-md-4">
+                    <h2>Heading</h2>
+                    <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+                    <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+                </div>
+            </div>
+
+            <hr>
+
+            <footer>
+                <p>&copy; 2016 Company, Inc.</p>
+            </footer>
+        </div> <!-- /container -->
+        {% block cuerpo %}
+
+        {% endblock cuerpo %}
+    </div>
+
+</div>
+</body>
+</html>

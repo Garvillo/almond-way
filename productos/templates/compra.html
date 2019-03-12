@@ -3,10 +3,10 @@
 
 {% if object %}
 <form role="form" action="{% url 'productos:modificar_compra' object.pk %}" method="post">
-	<h3>Modificar Compra</h3>
+	<h3>Modificar Factura de Compra</h3>
 {% else %}
 <form role="form" action="{% url 'productos:crear_compra' %}" method="post">
-	<h3>Crear Compra</h3>
+	<h3>Crear Factura de Compra</h3>
 {% endif %}
 	{% csrf_token %}
 	<div class="panel panel-default">

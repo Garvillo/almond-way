@@ -7,13 +7,12 @@ from .models import Producto, Proveedor, Compra, DetalleCompra
 from django.urls import reverse_lazy
 from django.views.generic.detail import DetailView
 from django.http.response import HttpResponseRedirect
-#for print pdf
-from django.core.files.storage import FileSystemStorage
-from django.http import HttpResponse
-from django.template.loader import render_to_string
-#from weasyprint import HTML
+from django.contrib.auth.decorators import login_required
+
+
 
 class ListadoProductos(ListView):
+
     model = Producto
     template_name = 'productos_listado.html'
     context_object_name = 'productos'
