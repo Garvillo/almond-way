@@ -2,34 +2,43 @@
 from __future__ import unicode_literals
 from django.contrib.auth.models import User
 from django.db import models
+from proveedores.models import Proveedor
+from titulares.models import  Titular
+from agentes.models import Agente
 
-# Create your models here.
+
+FPAGOS_CHOICES = [
+    ["PAGARE", "Pagare"],
+    ["TRANSFERENCIA", "Transferencia"],
+]
+
+class FormaPago(models.Model):
+    forma_pago = models.CharField(max_length=9, choices=FPAGOS_CHOICES, default="TRANSFERENCIA", verbose_name="Forma de Pago")
+
+
 class Producto(models.Model):
     descripcion = models.CharField(max_length=100, unique=True)
-    marca = models.CharField(max_length=40,blank=True)
-    precio = models.DecimalField(max_digits=15, decimal_places=5, default=0)
-    estado = models.BooleanField(default=True)
+    variedad = models.CharField(max_length=40,blank=True)
+    kilos = models.IntegerField(null=True, blank=True, default=0)
+
 
     def __str__(self):
         return self.descripcion
 
-class Proveedor(models.Model):
-    ruc = models.CharField(unique=True,max_length=11)
-    razon_social = models.CharField(max_length=150)
-    direccion = models.CharField(max_length=200)
-    telefono = models.CharField(max_length=15,null=True)
-    correo = models.EmailField(null=True)
-    estado = models.BooleanField(default=True)
-
-    def __str__(self):
-        return self.razon_social
 
 class Compra(models.Model):
+    titular = models.ForeignKey(Titular, on_delete=models.CASCADE)
     proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE)
+    agente = models.ForeignKey(Agente, on_delete=models.CASCADE, null=True, blank=True)
+    forma_pago = models.ForeignKey(FormaPago, on_delete=models.CASCADE, null=True, blank=True)
     fecha = models.DateField(auto_now_add=True)
 
 class DetalleCompra(models.Model):
     compra = models.ForeignKey(Compra, on_delete=models.CASCADE)
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
-    cantidad = models.DecimalField(max_digits=5, decimal_places=2)
-    precio_compra = models.DecimalField(max_digits=5,decimal_places=2)
+    cantidad = models.IntegerField()
+    precio_compra = models.DecimalField(max_digits=7,decimal_places=2)
+
+
+
+

@@ -3,10 +3,11 @@ hsanchezrisueño@gmail.com
 
 CERTIFICADOS ECOLOGICOS EN PROVEEDORES
 
-Pondremos un modelo para empresas certificadoras y que se relacione con proveedores.
+Pondremos un modelo para empresas certificadoras y que se
+relacione con proveedores (lo he puesto en cliente, cambiart0).
 
 ALMACEN
-- Agrupar la entrada por lotes
+- Agrupar la entrada por lotes (solo la ecológica)
 
 
 AGENTES

@@ -8,9 +8,7 @@
 		<a onclick="return abrir_modal('{% url 'clientes:crear_cliente' %}')" class="btn btn-success">
 			Crear nuevo cliente
 		</a>
-		<a  class="btn btn-primary">
-			Comprobar listado morosos*
-		</a>
+
 	</div>
 </div>
 <hr>
@@ -20,23 +18,25 @@
 		<table id="tabla" class="display" cellspacing="0" width="100%">
 			<thead>
 				<tr>
-					<th class="text-left">CIF</th>
+					<th class="text-left">DNI/CIF</th>
 					<th class="text-left">RAZON SOCIAL</th>
-					<th class="text-left">DIRECCION</th>
+					<th class="text-left">TELEFONO</th>
+
 					<th class="text-left">ESTADO</th>
-					<th class="text-left">ACCIONES</th>
+					<th class="text-left"></th>
 				</tr>
 			</thead>
 			<tbody>
 			{% for cliente in clientes %}
                 <tr>
-                    <td>{{ cliente.cif }}</td>
-                    <td>{{ cliente.razon_social }}</td>
-                    <td>{{ cliente.direccion }}</td>
-                    {% if cliente.estado %}
-                    <td>ACTIVO</td>
+                    <td>{{ cliente.cif | default_if_none:"--"}}</td>
+                    <td>{{ cliente.razon_social | default_if_none:"---" }}</td>
+					<td>{{ cliente.telefono | default_if_none:"---" }}</td>
+
+					{% if cliente.activo %}
+                    <td><span class="label label-success">activo</span></td>
                     {% else %}
-                    <td>INACTIVO</td>
+                    <td><span class="label label-danger">inactivo</span></td>
                     {% endif %}
                     <td class="text-left">
                         <a onclick="return abrir_modal('{% url 'clientes:detalle_cliente' cliente.pk %}')">

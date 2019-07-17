@@ -7,22 +7,26 @@
 		<div class="modal-body">
 			<div class="row">
 				<div class="col-lg-4">
-					<label>RUC:</label>
-					<p>{{ object.ruc }}</p>
+
+					<label>CIF:</label>
+					<p>{{ object.cif }}</p>
+
 					<label>RAZÓN SOCIAL:</label>
 					<p>{{ object.razon_social }}</p>
+
 					<label>DIRECCIÓN:</label>
-					<p>{{ object.direccion }}</p>
+					{% if object.direccioin %}<p>{{ object.direccion }}</p>{% else %}<p>...</p>{% endif %}
+
+
 					<label>TELÉFONO:</label>
-					<p>{{ object.telefono }}</p>
+					{% if object.telefono %}<p>{{ object.telefono }}</p>{% else %}<p>...</p>{% endif %}
+
 					<label>CORREO:</label>
-					<p>{{ object.correo }}</p>
+					{% if object.correo %}<p>{{ object.correo }}</p>{% else %}<p>...</p>{% endif %}
+
 					<label>ESTADO:</label>
-					{% if object.estado %}
-						<p>ACTIVO</p>
-					{% else %}
-						<p>INACTIVO</p>
-					{% endif %}
+					{% if object.estado %}<p>ACTIVO</p>{% else %}<p>INACTIVO</p>{% endif %}
+
 				</div>
 			</div>
 		</div>
