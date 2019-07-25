@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block cuerpo %}
+
+<h2>Agentes</h2>
+
+<div class="row">
+	<div class="col-lg-10">
+		<a onclick="return abrir_modal('{% url 'agentes:crear_agente' %}')" class="btn btn-success">
+			Crear nuevo agente
+		</a>
+
+	</div>
+</div>
+<hr>
+
+<div class="row">
+	<div class="col-lg-12">
+		<table id="tabla" class="display" cellspacing="0" width="100%">
+			<thead>
+				<tr>
+					<th class="text-left">NOMBRE</th>
+					<th class="text-left">OBSERVACIONES</th>
+					<th class="text-left">TELEFONO</th>
+
+					<th class="text-left">ESTADO</th>
+					<th class="text-left"></th>
+				</tr>
+			</thead>
+			<tbody>
+			{% for agente in agentes %}
+                <tr>
+                    <td>{{ agente.nombre | default_if_none:"--"}}</td>
+                    <td>{{ agente.observaciones | default_if_none:"---" }}</td>
+					<td>{{ agente.telefono | default_if_none:"---" }}</td>
+
+					{% if agente.activo %}
+                    <td><span class="label label-success">activo</span></td>
+                    {% else %}
+                    <td><span class="label label-danger">inactivo</span></td>
+                    {% endif %}
+                    <td class="text-left">
+                        <a onclick="return abrir_modal('{% url 'agentes:detalle_agente' agente.pk %}')">
+						<!--<span class="glyphicon glyphicon-eye-open"></span>-->
+							<span class="btn btn-info btn-sm">ver</span>
+						</a>
+						<a onclick="return abrir_modal('{% url 'agentes:modificar_agente' agente.pk %}')" class="btn">
+							<!--<span class="glyphicon glyphicon-edit"></span>-->
+							<span class="btn btn-warning btn-sm">modificar</span>
+						</a>
+                    </td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+<div id="popup" class="modal fade" role="dialog">
+
+</div>
+<script>
+function abrir_modal(url)
+{
+	$('#popup').load(url, function()
+	{
+		$(this).modal('show');
+	});
+	return false;
+}
+
+function cerrar_modal()
+{
+	$('#popup').modal('hide');
+	return false;
+}
+
+$(document).ready(function()
+{
+    var table = $('#tabla').dataTable( {
+        "language": {
+        	url: "/static/localizacion/es_ES.json"
+        }
+    } );
+});
+</script>
+{% endblock cuerpo %}

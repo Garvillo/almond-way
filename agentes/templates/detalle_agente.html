@@ -1,0 +1,35 @@
+<div class="modal-dialog modal-lg">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">x</button>
+			<h3>Detalle Cliente</h3>
+		</div>
+		<div class="modal-body">
+			<div class="row">
+				<div class="col-lg-12">
+
+					<p><label>NOMBRE:</label> {{ object.razon_social | default_if_none:"---" }}</p>
+
+					<p><label >CIF:</label> {{ object.cif | default_if_none:"---"}}</p>
+					<p><label >OBSERVACIONES:</label> {{ object.observaciones | default_if_none:"---"}}</p>
+					<p><label >DIRECCION:</label> {{ object.direccion | default_if_none:"---"}}</p>
+					<p><label>CORREO:</label> {{ object.correo | default_if_none:"---"}}</p>
+					<p><label>TELÉFONO:</label> {{ object.telefono | default_if_none:"---"}}</p>
+
+					{% if object.activo %}
+					<p><label>ESTADO:</label> <span class="label label-success">activo</span></p>
+					{% else %}
+					<p><label>ESTADO:</label><span class="label label-danger">inactivo</span></p>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<div class="col-lg-12 text-right">
+				<button type="button" class="btn btn-primary" onclick="return cerrar_modal()">
+					Aceptar
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

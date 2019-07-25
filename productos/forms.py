@@ -7,7 +7,7 @@ class ProductoForm(forms.ModelForm):
 
     class Meta:
         model = Producto
-        fields = ['descripcion', 'variedad', 'kilos']
+        fields = ['descripcion', 'variedad']
 
     def __init__(self, *args, **kwargs):
         super(ProductoForm, self).__init__(*args, **kwargs)
@@ -24,7 +24,7 @@ class CompraForm(forms.ModelForm):
 
     class Meta:
         model = Compra
-        fields = ['titular', 'proveedor','agente']
+        fields = ['titular', 'proveedor','agente', 'forma_pago']
 
     def __init__(self, *args, **kwargs):
         super(CompraForm, self).__init__(*args, **kwargs)

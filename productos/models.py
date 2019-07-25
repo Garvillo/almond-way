@@ -12,9 +12,6 @@ FPAGOS_CHOICES = [
     ["TRANSFERENCIA", "Transferencia"],
 ]
 
-class FormaPago(models.Model):
-    forma_pago = models.CharField(max_length=9, choices=FPAGOS_CHOICES, default="TRANSFERENCIA", verbose_name="Forma de Pago")
-
 
 class Producto(models.Model):
     descripcion = models.CharField(max_length=100, unique=True)
@@ -30,7 +27,7 @@ class Compra(models.Model):
     titular = models.ForeignKey(Titular, on_delete=models.CASCADE)
     proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE)
     agente = models.ForeignKey(Agente, on_delete=models.CASCADE, null=True, blank=True)
-    forma_pago = models.ForeignKey(FormaPago, on_delete=models.CASCADE, null=True, blank=True)
+    forma_pago = models.CharField(max_length=9, choices=FPAGOS_CHOICES, default="TRANSFERENCIA", verbose_name="Forma de Pago", null=True, blank=True)
     fecha = models.DateField(auto_now_add=True)
 
 class DetalleCompra(models.Model):

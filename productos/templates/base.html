@@ -39,6 +39,10 @@
           <li>
               <a href="{% url 'productos:listado_compras' %}">Facturas de Compra</a>
           </li>
+          <li>
+            <a href="{% url 'agentes:listado_agentes' %}">Agentes</a>
+          </li>
+
         </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li ><a href="{% url 'logout' %}">Bienvenido/a {{ user.username }}!  Salir</a></li>
