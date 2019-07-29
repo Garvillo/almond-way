@@ -28,4 +28,4 @@ class ModificarAgente(UpdateView):
 
 class DetalleAgente(DetailView):
     model = Agente
-    template_name = 'detalle_agente'
+    template_name = 'agente_detalle.html'

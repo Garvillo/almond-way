@@ -50,11 +50,11 @@
 				<td>INACTIVO</td>
 				{% endif %}
 				<td class="text-center">
-					<a onclick="return abrir_modal('{% url 'proveedores:detalle_proveedor' proveedor.pk %}')" class="btn">
-						<span class="btn btn-info btn-sm">ver</span>
+					<a class="btn btn-info btn-sm" onclick="return abrir_modal('{% url 'proveedores:detalle_proveedor' proveedor.pk %}')" class="btn">
+						ver
 					</a>
-					<a onclick="return abrir_modal('{% url 'proveedores:modificar_proveedor' proveedor.pk %}')" class="btn">
-						<span class="btn btn-warning btn-sm">modificar</span>
+					<a class="btn btn-warning btn-sm" onclick="return abrir_modal('{% url 'proveedores:modificar_proveedor' proveedor.pk %}')" class="btn">
+						modificar
 					</a>
 				</td>
 			</tr>
