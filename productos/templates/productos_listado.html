@@ -51,8 +51,8 @@
 						{{ producto.variedad }}</h6>
 
 						<p>
-							<a class="btn btn-default" onclick="return abrir_modal('{% url 'productos:detalle_producto' producto.pk %}','Productos / {{ producto.descripcion }}')" class="btn">
-								ver &raquo;
+							<a class="btn btn-default" href="{% url 'productos:detalle_producto' producto.pk %}" class="btn">
+								ver transacciones &raquo;
 							</a>
 							<a class="btn btn-default" onclick="return abrir_modal('{% url 'productos:modificar_producto' producto.pk %}','Productos / {{ producto.descripcion }}')" class="btn">
 								modificar &raquo;
@@ -82,7 +82,7 @@ function abrir_modal(url, titulo)
     {
         title: titulo,
         modal: true,
-        width: 500,
+        width: 700,
         resizable: false
     }).dialog('open').load(url)
 }

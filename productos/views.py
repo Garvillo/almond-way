@@ -9,7 +9,7 @@ from django.urls import reverse_lazy
 from django.views.generic.detail import DetailView
 from django.http.response import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-
+from django.shortcuts import render
 
 
 class ListadoProductos(ListView):
@@ -18,6 +18,33 @@ class ListadoProductos(ListView):
     template_name = 'productos_listado.html'
     context_object_name = 'productos'
 
+class DetalleProducto(DetailView):
+    model = Producto
+    template_name = 'detalle_producto.html'
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        print(self.object.kilos)
+        #form_class = self.get_form_class()
+        #form = self.get_form(form_class)
+        #todos los detalles de compra para este producto/silo
+
+        detalles = DetalleCompra.objects.filter(producto=self.object).order_by('pk')
+        detalles_data = []
+        kilos=0
+        for detalle in detalles:
+
+            kilos += detalle.cantidad
+            d = {'producto': detalle.producto,
+                 'cantidad': detalle.cantidad,
+                 'precio_compra': detalle.precio_compra,
+                 'fecha': detalle.fecha,
+                 'proveedor': detalle.compra.proveedor,
+                 'kilos_acumulados': kilos }
+            detalles_data.append(d)
+
+        #return self.render_to_response(self.get_context_data(form=form, detalle_compra_form_set=detalle_compra_form_set))
+
+        return render(request, 'detalle_transacciones.html', {'data': detalles_data, 'kilos': kilos})
 
 
 class ListadoCompras(ListView):
@@ -55,8 +82,7 @@ class ModificarCompra(UpdateView):
                  'precio_compra': detalle.precio_compra}
             detalles_data.append(d)
         detalle_compra_form_set = DetalleCompraFormSet(initial=detalles_data)
-        return self.render_to_response(self.get_context_data(form=form,
-                                                             detalle_compra_form_set=detalle_compra_form_set))
+        return self.render_to_response(self.get_context_data(form=form, detalle_compra_form_set=detalle_compra_form_set))
 
 
     def post(self, request, *args, **kwargs):
@@ -78,12 +104,9 @@ class ModificarCompra(UpdateView):
         return HttpResponseRedirect(self.success_url)
 
     def form_invalid(self, form, detalle_compra_form_set):
-        return self.render_to_response(self.get_context_data(form=form,
-                                                             detalle_compra_form_set = detalle_compra_form_set))
+        return self.render_to_response(self.get_context_data(form=form, detalle_compra_form_set = detalle_compra_form_set))
 
-class DetalleProducto(DetailView):
-    model = Producto
-    template_name = 'detalle_producto.html'
+
 
 
 class CrearCompra(CreateView):
@@ -97,8 +120,7 @@ class CrearCompra(CreateView):
         form_class = self.get_form_class()
         form = self.get_form(form_class)
         detalle_orden_compra_formset=DetalleCompraFormSet()
-        return self.render_to_response(self.get_context_data(form=form,
-                                                             detalle_compra_form_set=detalle_orden_compra_formset))
+        return self.render_to_response(self.get_context_data(form=form, detalle_compra_form_set=detalle_orden_compra_formset))
 
     def post(self, request, *args, **kwargs):
         form_class = self.get_form_class()
@@ -114,11 +136,21 @@ class CrearCompra(CreateView):
         self.object = form.save()
         detalle_compra_form_set.instance = self.object
         detalle_compra_form_set.save()
+
+        detalles = DetalleCompra.objects.filter(compra=self.object).order_by('pk')
+        for detalle in detalles:
+            d = {'producto': detalle.producto,
+                 'cantidad': detalle.cantidad,
+                 'precio_compra': detalle.precio_compra}
+            #print(detalle.producto)
+            p = Producto.objects.get(descripcion=detalle.producto)
+            p.kilos = p.kilos + detalle.cantidad
+            p.save()
+
         return HttpResponseRedirect(self.success_url)
 
     def form_invalid(self, form, detalle_compra_form_set):
-        return self.render_to_response(self.get_context_data(form=form,
-                                                             detalle_compra_form_set = detalle_compra_form_set))
+        return self.render_to_response(self.get_context_data(form=form, detalle_compra_form_set = detalle_compra_form_set))
 
 '''
 class Html_to_pdf_view(Request):

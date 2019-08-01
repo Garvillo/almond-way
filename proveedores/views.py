@@ -18,7 +18,7 @@ class DetalleProveedor(DetailView):
 class CrearProveedor(CreateView):
     template_name = 'proveedor_nuevo.html'
     form_class = ProveedorForm
-    success_url = reverse_lazy('productos:listado_proveedores')
+    success_url = reverse_lazy('proveedores:listado_proveedores')
 
 
 class ListadoProveedores(ListView):
@@ -30,4 +30,4 @@ class ModificarProveedor(UpdateView):
     model = Proveedor
     template_name = 'proveedor_modificar.html'
     form_class = ProveedorForm
-    success_url = reverse_lazy('productos:listado_proveedores')
+    success_url = reverse_lazy('proveedores:listado_proveedores')

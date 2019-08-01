@@ -27,7 +27,7 @@ class Compra(models.Model):
     titular = models.ForeignKey(Titular, on_delete=models.CASCADE)
     proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE)
     agente = models.ForeignKey(Agente, on_delete=models.CASCADE, null=True, blank=True)
-    forma_pago = models.CharField(max_length=9, choices=FPAGOS_CHOICES, default="TRANSFERENCIA", verbose_name="Forma de Pago", null=True, blank=True)
+    forma_pago = models.CharField(max_length=50, choices=FPAGOS_CHOICES, default="TRANSFERENCIA", verbose_name="Forma de Pago")
     fecha = models.DateField(auto_now_add=True)
 
 class DetalleCompra(models.Model):
@@ -35,7 +35,7 @@ class DetalleCompra(models.Model):
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     cantidad = models.IntegerField()
     precio_compra = models.DecimalField(max_digits=7,decimal_places=2)
-
+    fecha = models.DateField(auto_now_add=True)
 
 
 

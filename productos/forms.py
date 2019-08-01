@@ -58,4 +58,4 @@ class DetalleCompraForm(forms.ModelForm):
             raise forms.ValidationError("Debe ingresar un precio valido")
         return precio
 
-DetalleCompraFormSet = inlineformset_factory(Compra, DetalleCompra, form=DetalleCompraForm, extra=4)
+DetalleCompraFormSet = inlineformset_factory(Compra, DetalleCompra, form=DetalleCompraForm, extra=4 )
