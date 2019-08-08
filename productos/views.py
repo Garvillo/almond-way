@@ -18,6 +18,7 @@ class ListadoProductos(ListView):
     template_name = 'productos_listado.html'
     context_object_name = 'productos'
 
+#transacciones en un silo
 class DetalleProducto(DetailView):
     model = Producto
     template_name = 'detalle_producto.html'
@@ -37,9 +38,11 @@ class DetalleProducto(DetailView):
             d = {'producto': detalle.producto,
                  'cantidad': detalle.cantidad,
                  'precio_compra': detalle.precio_compra,
+                 'id': detalle.compra.pk,
                  'fecha': detalle.fecha,
                  'proveedor': detalle.compra.proveedor,
-                 'kilos_acumulados': kilos }
+                 'kilos_acumulados': kilos
+            }
             detalles_data.append(d)
 
         #return self.render_to_response(self.get_context_data(form=form, detalle_compra_form_set=detalle_compra_form_set))
@@ -133,19 +136,53 @@ class CrearCompra(CreateView):
 
 
     def form_valid(self, form, detalle_compra_form_set):
+
+        #obtenemos la ultima de su  serie prara generar un nuevo numero
+        qsComp_last=Compra.objects.filter(lfact=form.instance.titular.letra).order_by('nfact').last()
+        form.instance.nfact = qsComp_last.nfact+1
+        form.instance.lfact = qsComp_last.lfact
+        #print(qsComp_last.nfact+1)
+
         self.object = form.save()
         detalle_compra_form_set.instance = self.object
         detalle_compra_form_set.save()
+        total_base =  0
 
         detalles = DetalleCompra.objects.filter(compra=self.object).order_by('pk')
         for detalle in detalles:
             d = {'producto': detalle.producto,
                  'cantidad': detalle.cantidad,
                  'precio_compra': detalle.precio_compra}
-            #print(detalle.producto)
+
+            #sumamos los kilos de cada detalle en su almacen(silo)
             p = Producto.objects.get(descripcion=detalle.producto)
             p.kilos = p.kilos + detalle.cantidad
             p.save()
+
+            #calculamos su precio base
+            total_detalle = detalle.cantidad * detalle.precio_compra
+            print("valores en €")
+            print (detalle.producto, total_detalle)
+            total_base = total_base + total_detalle
+
+        print("base ", total_base )
+        #aplicamos impuestos
+        form.instance.base = total_base
+        form.instance.imp_aplicado =  total_base * form.instance.impuestos.impuesto1/100
+        print("valor de impuestto 1 ", form.instance.imp_aplicado )
+        #Comprobamos si hay un segundo impuesto a aplicar
+        if form.instance.impuestos.impuesto2:
+            if form.instance.impuestos.se_calcula_con == "BASE":
+                form.instance.imp_aplicado = form.instance.imp_aplicado + total_base * form.instance.impuestos.impuesto2/100
+                print("calculando impuesto 2 BASE ", form.instance.imp_aplicado)
+            if form.instance.impuestos.se_calcula_con == "TOTAL":
+                form.instance.imp_aplicado = form.instance.imp_aplicado + (form.instance.imp_aplicado+total_base)  * form.instance.impuestos.impuesto2/100
+                print("calculando impuesto 2 TOTAL", form.instance.imp_aplicado)
+        form.instance.total = total_base + form.instance.imp_aplicado
+
+        print("impuestos ",form.instance.imp_aplicado)
+        print("total", form.instance.total)
+
 
         return HttpResponseRedirect(self.success_url)
 

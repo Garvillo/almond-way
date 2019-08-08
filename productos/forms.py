@@ -24,11 +24,13 @@ class CompraForm(forms.ModelForm):
 
     class Meta:
         model = Compra
-        fields = ['titular', 'proveedor','agente', 'forma_pago']
+        fields = ['titular', 'proveedor', 'agente', 'forma_pago', 'impuestos']
 
     def __init__(self, *args, **kwargs):
         super(CompraForm, self).__init__(*args, **kwargs)
         for field in iter(self.fields):
+
+
             self.fields[field].widget.attrs.update({
                 'class': 'form-control'
             })

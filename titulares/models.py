@@ -3,6 +3,7 @@ from django.db import models
 
 class Titular(models.Model):
     nombre = models.CharField(max_length=150)
+    letra = models.CharField(max_length=2, default="A")
     cif = models.CharField(unique=True, max_length=11)
     direccion = models.CharField(max_length=200, null=True, blank=True)
     telefono = models.CharField(max_length=15,null=True, blank=True)

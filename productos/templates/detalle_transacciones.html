@@ -17,10 +17,12 @@
         <div class="row">
                  <div class="col-lg-5 text-right">
 
-                        <span class="btn btn-info btn-sm" style="width:100%;" >
+                     <a href="{% url 'productos:modificar_compra' d.id %}" class="btn btn-warning btn-sm">
+                         <span class="btn btn-info btn-sm" style="width:100%;" >
                             Compra de {{ d.producto }}
                             <span class="badge" >{{ d.cantidad }}</span> Kg a {{ d.proveedor }}
                         </span>
+                     </a>
 
                 </div>
                 <div class="col-lg-2 text-center">

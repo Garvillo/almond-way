@@ -15,15 +15,20 @@
 		<table id="tabla" class="display" cellspacing="0" width="100%">
 			<thead>
 				<tr>
-					<th class="text-center">PROVEEDOR</th>
-					<th class="text-center">FECHA</th>
-					<th class="text-center">ACCIONES</th>
+
+					<th class="text-center">F.Num.</th>
+					<th class="text-center">Titular</th>
+					<th class="text-center">Proveedor</th>
+					<th class="text-center">Feccha</th>
+					<th class="text-center">Acciones</th>
 				</tr>
 			</thead>
 			<tbody>
 			{% for compra in compras %}
                 <tr>
-                    <td>{{ compra.proveedor }}</td>
+					<td>{{ compra.numero }}</td>
+					<td>{{ compra.titular }}</td>
+					<td>{{ compra.proveedor }}</td>
                     <td>{{ compra.fecha }}</td>
                     <td class="text-center">
                         <!--<a href="#" class="btn">
