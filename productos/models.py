@@ -60,7 +60,7 @@ class DetalleCompra(models.Model):
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     cantidad = models.IntegerField()
     precio_compra = models.DecimalField(max_digits=7,decimal_places=2)
-    fecha = models.DateField(auto_now_add=True)
 
+    fecha = models.DateField(auto_now_add=True)
 
 

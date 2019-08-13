@@ -50,6 +50,8 @@ class DetalleProducto(DetailView):
         return render(request, 'detalle_transacciones.html', {'data': detalles_data, 'kilos': kilos})
 
 
+
+
 class ListadoCompras(ListView):
     model = Compra
     template_name = 'compras.html'
@@ -143,6 +145,9 @@ class CrearCompra(CreateView):
         form.instance.lfact = qsComp_last.lfact
         #print(qsComp_last.nfact+1)
 
+
+
+
         self.object = form.save()
         detalle_compra_form_set.instance = self.object
         detalle_compra_form_set.save()
@@ -165,6 +170,8 @@ class CrearCompra(CreateView):
             print (detalle.producto, total_detalle)
             total_base = total_base + total_detalle
 
+
+
         print("base ", total_base )
         #aplicamos impuestos
         form.instance.base = total_base
@@ -183,11 +190,53 @@ class CrearCompra(CreateView):
         print("impuestos ",form.instance.imp_aplicado)
         print("total", form.instance.total)
 
+        form.instance.save()
 
         return HttpResponseRedirect(self.success_url)
 
     def form_invalid(self, form, detalle_compra_form_set):
         return self.render_to_response(self.get_context_data(form=form, detalle_compra_form_set = detalle_compra_form_set))
+
+
+
+
+class DetailCompra(DetailView):
+    model = Compra
+    template_name = 'detalle_producto.html'
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        print("-"*10)
+        print(self.object.base)
+        print(self.object.numero)
+        #form_class = self.get_form_class()
+        #form = self.get_form(form_class)
+        #todos los detalles de compra para este producto/silo
+        compra = self.object
+
+        detalles = DetalleCompra.objects.filter(compra=self.object).order_by('pk')
+        detalles_data = []
+        kilos=0
+        for detalle in detalles:
+
+            kilos += detalle.cantidad
+            d = {'producto': detalle.producto,
+                 'cantidad': detalle.cantidad,
+                 'precio_compra': detalle.precio_compra,
+                 'total_detalle': (detalle.precio_compra * detalle.cantidad)
+
+                 #'id': detalle.compra.pk,
+                 #'fecha': detalle.fecha,
+                 #'proveedor': detalle.compra.proveedor,
+                 #'kilos_acumulados': kilos
+                 }
+            detalles_data.append(d)
+
+
+        #return self.render_to_response(self.get_context_data(form=form, detalle_compra_form_set=detalle_compra_form_set))
+
+        return render(request, 'detail_compra.html', {'detalles': detalles_data, 'compra': compra})
+
+
 
 '''
 class Html_to_pdf_view(Request):

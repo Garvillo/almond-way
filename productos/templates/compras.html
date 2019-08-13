@@ -34,7 +34,12 @@
                         <!--<a href="#" class="btn">
                             <span class="glyphicon glyphicon-eye-open"></span>
                         </a>-->
-                        <a href="{% url 'productos:modificar_compra' compra.pk %}" class="btn btn-warning btn-sm">
+                        <a href="{% url 'productos:detalle_compra' compra.pk %}"
+                           class="btn btn-info btn-sm">
+                            ver
+                        </a>
+                        <a href="{% url 'productos:modificar_compra' compra.pk %}"
+                           class="btn btn-warning btn-sm">
 							modificar
                         </a>
 						<a href="#" class="btn btn-primary btn-sm">

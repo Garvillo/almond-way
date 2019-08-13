@@ -3,7 +3,7 @@ from django.conf.urls import url
 
 
 from .views import ListadoProductos, CrearProducto, ModificarProducto, DetalleProducto
-from .views import CrearCompra, ModificarCompra, ListadoCompras
+from .views import CrearCompra, ModificarCompra, ListadoCompras, DetailCompra
 
 app_name = 'productos'
 
@@ -14,6 +14,7 @@ urlpatterns = [
     url(r'^detalle_producto/(?P<pk>.+)/$',DetalleProducto.as_view(), name="detalle_producto"),
     url(r'^crear_compra/$', CrearCompra.as_view(), name="crear_compra"),
     url(r'^modificar_compra/(?P<pk>.+)/$',ModificarCompra.as_view(), name="modificar_compra"),
+    url(r'^detalle_compra/(?P<pk>.+)/$',DetailCompra.as_view(), name="detalle_compra"),
     url(r'^compras/$', ListadoCompras.as_view(), name="listado_compras"),
 
 
