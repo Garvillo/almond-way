@@ -141,9 +141,13 @@ class CrearCompra(CreateView):
 
         #obtenemos la ultima de su  serie prara generar un nuevo numero
         qsComp_last=Compra.objects.filter(lfact=form.instance.titular.letra).order_by('nfact').last()
-        form.instance.nfact = qsComp_last.nfact+1
-        form.instance.lfact = qsComp_last.lfact
-        #print(qsComp_last.nfact+1)
+
+        if qsComp_last:
+            form.instance.nfact = qsComp_last.nfact+1
+        else:
+            form.instance.nfact = 1
+        form.instance.lfact = form.instance.titular.letra
+
 
 
 
