@@ -5,6 +5,7 @@ from django.db import models
 from proveedores.models import Proveedor
 from titulares.models import  Titular
 from agentes.models import Agente
+from clientes.models import Cliente
 
 
 FPAGOS_CHOICES = [
@@ -22,8 +23,8 @@ class Producto(models.Model):
     kilos = models.IntegerField(null=True, blank=True, default=0)
 
     def __str__(self):
-        return self.descripcion
-
+        #return self.descripcion
+        return "{} ({}Kg)".format(self.descripcion, self.kilos)
 class Impuestos(models.Model):
 
     nombre = models.CharField(max_length=150)
@@ -33,6 +34,8 @@ class Impuestos(models.Model):
 
     def __str__(self):
         return self.nombre
+
+# COMPRA -------------------------------------------------------------------------------
 
 class Compra(models.Model):
     titular = models.ForeignKey(Titular, on_delete=models.CASCADE)
@@ -63,4 +66,34 @@ class DetalleCompra(models.Model):
 
     fecha = models.DateField(auto_now_add=True)
 
+# VENTAS ----------------------------------------------------------------------------
 
+class Venta(models.Model):
+    titular = models.ForeignKey(Titular, on_delete=models.CASCADE)
+    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+    agente = models.ForeignKey(Agente, on_delete=models.CASCADE, null=True, blank=True)
+    forma_pago = models.CharField(max_length=50, choices=FPAGOS_CHOICES, default="TRANSFERENCIA", verbose_name="Forma de Pago")
+    fecha = models.DateField(auto_now_add=True)
+
+    nfact = models.IntegerField()
+    lfact = models.CharField(max_length=2)
+
+    impuestos = models.ForeignKey(Impuestos, on_delete=models.CASCADE)
+    imp_aplicado = models.DecimalField(null=True, blank = True, decimal_places=2, max_digits=12)
+    base = models.DecimalField(null=True, blank=True,decimal_places=2, max_digits=12)
+    total = models.DecimalField(null=True, blank=True, decimal_places=2, max_digits=12)
+
+    def __str__(self):
+        return "{}{} {}".format(self.lfact, str(self.nfact).zfill(5), self.cliente)
+
+    def numero(self):
+        return "{}{}" .format(self.lfact, str(self.nfact).zfill(5))
+
+
+class DetalleVenta(models.Model):
+    venta = models.ForeignKey(Venta, on_delete=models.CASCADE)
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    cantidad = models.IntegerField()
+    precio_venta = models.DecimalField(max_digits=7,decimal_places=2)
+
+    fecha = models.DateField(auto_now_add=True)

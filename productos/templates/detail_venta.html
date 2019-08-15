@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% block cuerpo %}
+
+<div class="row">
+	<div class="col-lg-12">
+		<a href=" {% url 'productos:listado_productos' %} class="btn btn-success">
+
+		</a>
+	</div>
+</div>
+<h4> Vista de factura de venta </h4>
+<hr/>
+
+
+<div class="container">
+
+<div class="row">
+
+
+    <div class="col-sm-4">
+        <div class="panel panel-default">
+
+            <div class="panel-body">
+                <p>
+                <h3>N.Factura: {{ venta.numero}}</h3><br>
+                Fecha emision: {{ venta.fecha}}<br>
+                Forma de pago: {{ venta.forma_pago}}<br>
+
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div class="col-sm-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">Datos del titular</div>
+            <div class="panel-body">
+                <p>
+                    {{ venta.titular.nombre}}<br>
+                    {{ venta.titular.cif}}<br>
+                    {{ venta.titular.direccion}}<br>
+
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-sm-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">Datos del destinatario</div>
+            <div class="panel-body">
+                <p>
+                    {{ venta.cliente.razon_social}}<br>
+                    {{ venta.cliente.ruc}}<br>
+                    {{ venta.cliente.direccion}}<br>
+
+                </p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+        <div class="row">
+            <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Conceptos facturados</h3>
+                </div>
+                <div class="panel-body">
+
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Concepto</th>
+                            <th scope="col">Unidades</th>
+                            <th scope="col">Precio/U.</th>
+                            <th scope="col">Total</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for 	d in detalles %}
+                        <tr>
+                            <td>{{ d.producto }}</td>
+                            <td>{{ d.cantidad }}</td>
+                            <td>{{ d.precio_venta }}</td>
+                            <td>{{ d.total_detalle }}</td>
+                        </tr>
+                        {% endfor %}
+
+                        <tr style="border:no-border;">
+                            <td></td>
+                            <td></td>
+                            <td class="text-right">BASE</td>
+                            <td>{{ venta.base }}</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td colspan="2" class="text-right">{{ venta.impuestos   }}</td>
+                            <td>{{ venta.imp_aplicado }}</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td class="text-right">TOTAL </td>
+                            <td>{{ venta.total }}</td>
+                        </tr>
+
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            </div>
+        </div>
+</div>
+
+
+
+{% endblock cuerpo %}

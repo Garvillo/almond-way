@@ -11,36 +11,7 @@
 <hr/>
 <div class="row">
 	<div class="col-lg-12">
-		<!--
-		<table id="tabla" class="display" cellspacing="0" width="100%">
-			<thead>
-				<tr>
-					<th class="text-left">DESCRIPCION</th>
-					<th class="text-left">Variedad</th>
-					<th class="text-left">KG</th>
-									<th class="text-left">ACCIONES</th>
-				</tr>
-			</thead>
-			<tbody>
-			{% for producto in productos %}
-                <tr>
-                    <td>{{ producto.descripcion }}</td>
-                    <td>{{ producto.variedad }}</td>
-                    <td>{{ producto.kilos }}</td>
 
-                    <td class="text-left">
-                        <a onclick="return abrir_modal('{% url 'productos:detalle_producto' producto.pk %}','Productos / {{ producto.descripcion }}')" class="btn">
-							<span class="btn btn-info btn-sm">ver</span>
-                        </a>
-                        <a onclick="return abrir_modal('{% url 'productos:modificar_producto' producto.pk %}','Productos / {{ producto.descripcion }}')" class="btn">
-							<span class="btn btn-warning btn-sm">modificar</span>
-                        </a>
-                    </td>
-				</tr>
-			{% endfor %}
-			</tbody>
-		</table>
-		-->
 
         	{% for producto in productos %}
 
@@ -51,7 +22,7 @@
 						{{ producto.variedad }}</h6>
 
 						<p>
-							<a class="btn btn-default" href="{% url 'productos:detalle_producto' producto.pk %}" class="btn">
+							<a class="btn btn-default" href="{% url 'productos:detalle_transacciones' producto.pk %}" class="btn">
 								ver transacciones &raquo;
 							</a>
 							<a class="btn btn-default" onclick="return abrir_modal('{% url 'productos:modificar_producto' producto.pk %}','Productos / {{ producto.descripcion }}')" class="btn">

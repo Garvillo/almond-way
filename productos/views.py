@@ -3,7 +3,9 @@ from __future__ import unicode_literals
 from django.views.generic.edit import UpdateView, CreateView
 from django.views.generic.list import ListView
 from .forms import ProductoForm,  CompraForm, DetalleCompraFormSet
+from .forms import VentaForm, DetalleVentaFormSet
 from .models import Producto,  Compra, DetalleCompra
+from .models import Venta, DetalleVenta
 
 from django.urls import reverse_lazy
 from django.views.generic.detail import DetailView
@@ -19,9 +21,9 @@ class ListadoProductos(ListView):
     context_object_name = 'productos'
 
 #transacciones en un silo
-class DetalleProducto(DetailView):
+class DetalleTransacciones(DetailView):
     model = Producto
-    template_name = 'detalle_producto.html'
+
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         print(self.object.kilos)
@@ -29,10 +31,10 @@ class DetalleProducto(DetailView):
         #form = self.get_form(form_class)
         #todos los detalles de compra para este producto/silo
 
-        detalles = DetalleCompra.objects.filter(producto=self.object).order_by('pk')
-        detalles_data = []
+        detalles_compra = DetalleCompra.objects.filter(producto=self.object).order_by('pk')
+        detalles_compra_dic = []
         kilos=0
-        for detalle in detalles:
+        for detalle in detalles_compra:
 
             kilos += detalle.cantidad
             d = {'producto': detalle.producto,
@@ -43,11 +45,29 @@ class DetalleProducto(DetailView):
                  'proveedor': detalle.compra.proveedor,
                  'kilos_acumulados': kilos
             }
-            detalles_data.append(d)
+            detalles_compra_dic.append(d)
+
+        detalles_venta = DetalleVenta.objects.filter(producto=self.object).order_by('pk')
+        detalles_venta_dic = []
+       # kilos=0
+        for detalle in detalles_venta:
+
+            kilos -= detalle.cantidad
+            d = {'producto': detalle.producto,
+                 'cantidad': detalle.cantidad,
+                 'precio_venta': detalle.precio_venta,
+                 'id': detalle.venta.pk,
+                 'fecha': detalle.fecha,
+                 'cliente': detalle.venta.cliente,
+                 'kilos_acumulados': kilos
+            }
+            detalles_venta_dic.append(d)
 
         #return self.render_to_response(self.get_context_data(form=form, detalle_compra_form_set=detalle_compra_form_set))
 
-        return render(request, 'detalle_transacciones.html', {'data': detalles_data, 'kilos': kilos})
+        return render(request, 'detalle_transacciones.html', {'compras': detalles_compra_dic,
+                                                              'ventas': detalles_venta_dic,
+                                                              'kilos': kilos})
 
 
 
@@ -56,6 +76,12 @@ class ListadoCompras(ListView):
     model = Compra
     template_name = 'compras.html'
     context_object_name = 'compras'
+
+class ListadoVentas(ListView):
+    model = Venta
+    template_name = 'ventas.html'
+    context_object_name = 'ventas'
+
 
 class CrearProducto(CreateView):
     template_name = 'producto_nuevo.html'
@@ -203,10 +229,10 @@ class CrearCompra(CreateView):
 
 
 
-
+# factura de compra
 class DetailCompra(DetailView):
     model = Compra
-    template_name = 'detalle_producto.html'
+    #template_name = 'detalle_producto.html'
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         print("-"*10)
@@ -240,25 +266,127 @@ class DetailCompra(DetailView):
 
         return render(request, 'detail_compra.html', {'detalles': detalles_data, 'compra': compra})
 
+# -----------------------------  ventas  ---------------------------------
 
 
-'''
-class Html_to_pdf_view(Request):
-    model = Proveedor
-    template_name = 'detalle_proveedor.html'
-    #model=
-    paragraphs = ['first paragraph', 'second paragraph', 'third paragraph']
-    html_string = render_to_string('detalle_proveedor.html', {'paragraphs': paragraphs})
+class CrearVenta(CreateView):
+    model = Venta
+    template_name = 'venta.html'
+    form_class = VentaForm
+    success_url = reverse_lazy('productos:listado_ventas')
 
-    html = HTML(string=html_string)
-    html.write_pdf(target='/tmp/mypdf.pdf')
+    def get(self, request, *args, **kwargs):
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        detalle_orden_venta_formset = DetalleVentaFormSet()
+        return self.render_to_response(self.get_context_data(form=form, detalle_venta_form_set = detalle_orden_venta_formset))
 
-    fs = FileSystemStorage('/tmp')
-    with fs.open('mypdf.pdf') as pdf:
-        response = HttpResponse(pdf, content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename="mypdf.pdf"'
-        #return response
+    def post(self, request, *args, **kwargs):
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        detalle_venta_form_set = DetalleVentaFormSet(request.POST)
+        if form.is_valid() and detalle_venta_form_set.is_valid():
+            return self.form_valid(form, detalle_venta_form_set)
+        else:
+            return self.form_invalid(form, detalle_venta_form_set)
 
-        #return response
-'''
-#sofia
+
+    def form_valid(self, form, detalle_venta_form_set):
+
+        #obtenemos la ultima de su  serie prara generar un nuevo numero
+        qsComp_last = Venta.objects.filter(lfact=form.instance.titular.letra).order_by('nfact').last()
+
+        if qsComp_last:
+            form.instance.nfact = qsComp_last.nfact+1
+        else:
+            form.instance.nfact = 1
+        form.instance.lfact = form.instance.titular.letra
+
+        self.object = form.save()
+        detalle_venta_form_set.instance = self.object
+        detalle_venta_form_set.save()
+        total_base =  0
+
+        detalles = DetalleVenta.objects.filter(venta=self.object).order_by('pk')
+        for detalle in detalles:
+            d = {'producto': detalle.producto,
+                 'cantidad': detalle.cantidad,
+                 'precio_venta': detalle.precio_venta}
+
+            #sumamos los kilos de cada detalle en su almacen(silo)
+            p = Producto.objects.get(descripcion = detalle.producto)
+            p.kilos -=  detalle.cantidad
+            p.save()
+
+            #calculamos su precio base
+            total_detalle = detalle.cantidad * detalle.precio_venta
+            print("valores en €")
+            print (detalle.producto, total_detalle)
+            total_base = total_base + total_detalle
+
+        print("base ", total_base )
+        #aplicamos impuestos
+        form.instance.base = total_base
+        form.instance.imp_aplicado =  total_base * form.instance.impuestos.impuesto1/100
+        print("valor de impuestto 1 ", form.instance.imp_aplicado )
+        #Comprobamos si hay un segundo impuesto a aplicar
+        if form.instance.impuestos.impuesto2:
+            if form.instance.impuestos.se_calcula_con == "BASE":
+                form.instance.imp_aplicado = form.instance.imp_aplicado + total_base * form.instance.impuestos.impuesto2/100
+                print("calculando impuesto 2 BASE ", form.instance.imp_aplicado)
+            if form.instance.impuestos.se_calcula_con == "TOTAL":
+                form.instance.imp_aplicado = form.instance.imp_aplicado + (form.instance.imp_aplicado+total_base)  * form.instance.impuestos.impuesto2/100
+                print("calculando impuesto 2 TOTAL", form.instance.imp_aplicado)
+        form.instance.total = total_base + form.instance.imp_aplicado
+
+        print("impuestos ",form.instance.imp_aplicado)
+        print("total", form.instance.total)
+
+        form.instance.save()
+
+        return HttpResponseRedirect(self.success_url)
+
+    def form_invalid(self, form, detalle_venta_form_set):
+        return self.render_to_response(self.get_context_data(form=form, detalle_venta_form_set = detalle_venta_form_set))
+
+
+
+# factura de venta
+class DetailVenta(DetailView):
+    model = Venta
+    #template_name = 'detalle_producto.html'
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        print("-"*10)
+        print(self.object.base)
+        print(self.object.numero)
+        #form_class = self.get_form_class()
+        #form = self.get_form(form_class)
+        #todos los detalles de compra para este producto/silo
+        venta = self.object
+
+        detalles = DetalleVenta.objects.filter(venta=self.object).order_by('pk')
+        detalles_data = []
+        kilos=0
+        for detalle in detalles:
+
+            kilos += detalle.cantidad
+            d = {'producto': detalle.producto,
+                 'cantidad': detalle.cantidad,
+                 'precio_venta': detalle.precio_venta,
+                 'total_detalle': (detalle.precio_venta * detalle.cantidad)
+
+                 #'id': detalle.compra.pk,
+                 #'fecha': detalle.fecha,
+                 #'proveedor': detalle.compra.proveedor,
+                 #'kilos_acumulados': kilos
+                 }
+            detalles_data.append(d)
+
+
+        #return self.render_to_response(self.get_context_data(form=form, detalle_compra_form_set=detalle_compra_form_set))
+
+        return render(request, 'detail_venta.html', {'detalles': detalles_data, 'venta': venta })
+
+
