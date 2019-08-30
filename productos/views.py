@@ -6,12 +6,13 @@ from .forms import ProductoForm,  CompraForm, DetalleCompraFormSet
 from .forms import VentaForm, DetalleVentaFormSet
 from .models import Producto,  Compra, DetalleCompra
 from .models import Venta, DetalleVenta
-
+from .models import Historico
 from django.urls import reverse_lazy
 from django.views.generic.detail import DetailView
 from django.http.response import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+import django.utils.timezone
 
 
 class ListadoProductos(ListView):
@@ -26,18 +27,19 @@ class DetalleTransacciones(DetailView):
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
-        print(self.object.kilos)
-        #form_class = self.get_form_class()
-        #form = self.get_form(form_class)
-        #todos los detalles de compra para este producto/silo
 
+        '''
+        Historico.objects.all().delete()
+
+        self.object = self.get_object()
         detalles_compra = DetalleCompra.objects.filter(producto=self.object).order_by('pk')
         detalles_compra_dic = []
         kilos=0
+
         for detalle in detalles_compra:
 
             kilos += detalle.cantidad
-            d = {'producto': detalle.producto,
+            d = {#'producto': detalle.producto,
                  'cantidad': detalle.cantidad,
                  'precio_compra': detalle.precio_compra,
                  'id': detalle.compra.pk,
@@ -46,6 +48,13 @@ class DetalleTransacciones(DetailView):
                  'kilos_acumulados': kilos
             }
             detalles_compra_dic.append(d)
+            Historico.objects.create(compra = detalle.compra,
+                                     producto = detalle.producto,
+                                     cantidad = detalle.cantidad,
+                                     precio_compra = detalle.precio_compra,
+                                     fecha = detalle.fecha,
+                                     lote_heredado = detalle.lote_heredado,
+                                     kilos_actuales = kilos)
 
         detalles_venta = DetalleVenta.objects.filter(producto=self.object).order_by('pk')
         detalles_venta_dic = []
@@ -53,7 +62,8 @@ class DetalleTransacciones(DetailView):
         for detalle in detalles_venta:
 
             kilos -= detalle.cantidad
-            d = {'producto': detalle.producto,
+            d = {#'producto': detalle.producto,
+                 'lote_heredado': detalle.lote_heredado,
                  'cantidad': detalle.cantidad,
                  'precio_venta': detalle.precio_venta,
                  'id': detalle.venta.pk,
@@ -62,12 +72,26 @@ class DetalleTransacciones(DetailView):
                  'kilos_acumulados': kilos
             }
             detalles_venta_dic.append(d)
+            Historico.objects.create(venta = detalle.venta,
+                                     producto = detalle.producto,
+                                     cantidad = detalle.cantidad,
+                                     precio_venta = detalle.precio_venta,
+                                     fecha = detalle.fecha,
+                                     lote_heredado = detalle.lote_heredado,
+                                     kilos_actuales = kilos)
 
-        #return self.render_to_response(self.get_context_data(form=form, detalle_compra_form_set=detalle_compra_form_set))
 
+        #qkilos = Producto.objects.get(self.object)
+        transacciones = Historico.objects.filter(producto=self.object).order_by('-fecha')
+        
         return render(request, 'detalle_transacciones.html', {'compras': detalles_compra_dic,
                                                               'ventas': detalles_venta_dic,
                                                               'kilos': kilos})
+        '''
+        transacciones = Historico.objects.filter(producto=self.object).order_by('-fecha')
+
+        return render(request, 'detalle_transacciones_historico.html', {'transacciones': transacciones,
+                                                                        'kilos': self.object.kilos})
 
 
 
@@ -76,6 +100,11 @@ class ListadoCompras(ListView):
     model = Compra
     template_name = 'compras.html'
     context_object_name = 'compras'
+
+    def get_queryset(self):
+        #mostramos las facturas de este año en orden descendente
+        current_year = django.utils.timezone.now().year
+        return Compra.objects.filter(fecha__year = current_year).order_by('id')
 
 class ListadoVentas(ListView):
     model = Venta
@@ -174,10 +203,6 @@ class CrearCompra(CreateView):
             form.instance.nfact = 1
         form.instance.lfact = form.instance.titular.letra
 
-
-
-
-
         self.object = form.save()
         detalle_compra_form_set.instance = self.object
         detalle_compra_form_set.save()
@@ -190,9 +215,31 @@ class CrearCompra(CreateView):
                  'precio_compra': detalle.precio_compra}
 
             #sumamos los kilos de cada detalle en su almacen(silo)
-            p = Producto.objects.get(descripcion=detalle.producto)
-            p.kilos = p.kilos + detalle.cantidad
-            p.save()
+            #p = Producto.objects.get(descripcion=detalle.producto)
+            #p.kilos = p.kilos + detalle.cantidad
+            #p.save()
+
+            detalle.producto.kilos += detalle.cantidad
+            detalle.producto.save()
+
+            # si el producto entra a un silo con lote
+            if detalle.producto.lote:
+                detalle.lote_heredado = detalle.producto.lote
+                print("detalle lote", detalle.lote_heredado)
+                detalle.save()
+                #detalle.save(update_fields=["lote_heredado"])
+                #DetalleVenta.objects.get(pk=detalle.pk).save(update_fields=["lote_heredado"])
+
+            #qs = DetalleVenta.objects.get(pk =detalle.pk)
+            #print("guardado en historico ", qs.producto, qs.cantidad, qs.precio_venta, qs.lote_heredado)
+            Historico.objects.create(compra = detalle.compra,
+                                     producto = detalle.producto,
+                                     cantidad = detalle.cantidad,
+                                     precio_compra = detalle.precio_compra,
+                                     fecha = detalle.fecha,
+                                     lote_heredado = detalle.lote_heredado,
+                                     kilos_actuales= detalle.producto.kilos)
+
 
             #calculamos su precio base
             total_detalle = detalle.cantidad * detalle.precio_compra
@@ -314,16 +361,32 @@ class CrearVenta(CreateView):
                  'cantidad': detalle.cantidad,
                  'precio_venta': detalle.precio_venta}
 
-            #sumamos los kilos de cada detalle en su almacen(silo)
-            p = Producto.objects.get(descripcion = detalle.producto)
-            p.kilos -=  detalle.cantidad
-            p.save()
+            # Restamos los kilos de cada detalle en su almacen (silo)
+            detalle.producto.kilos -= detalle.cantidad
+            detalle.producto.save()
+
+            # si el producto sale de un silo con lote
+            if detalle.producto.lote:
+                detalle.lote_heredado = detalle.producto.lote
+                print("detalle lote", detalle.lote_heredado)
+                detalle.save()
+                #detalle.save(update_fields=["lote_heredado"])
+                #DetalleVenta.objects.get(pk=detalle.pk).save(update_fields=["lote_heredado"])
+
+            Historico.objects.create(venta = detalle.venta,
+                                         producto = detalle.producto,
+                                         cantidad = detalle.cantidad,
+                                         precio_venta = detalle.precio_venta,
+                                         fecha = detalle.fecha,
+                                         lote_heredado = detalle.lote_heredado,
+                                         kilos_actuales= detalle.producto.kilos)
 
             #calculamos su precio base
             total_detalle = detalle.cantidad * detalle.precio_venta
             print("valores en €")
             print (detalle.producto, total_detalle)
             total_base = total_base + total_detalle
+
 
         print("base ", total_base )
         #aplicamos impuestos
@@ -373,6 +436,7 @@ class DetailVenta(DetailView):
 
             kilos += detalle.cantidad
             d = {'producto': detalle.producto,
+                 'lote_heredado': detalle.lote_heredado,
                  'cantidad': detalle.cantidad,
                  'precio_venta': detalle.precio_venta,
                  'total_detalle': (detalle.precio_venta * detalle.cantidad)

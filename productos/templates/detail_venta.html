@@ -87,7 +87,7 @@
                         <tbody>
                         {% for 	d in detalles %}
                         <tr>
-                            <td>{{ d.producto }}</td>
+                            <td>{{ d.producto }} {{ d.lote_heredado | default_if_none:""}}</td>
                             <td>{{ d.cantidad }}</td>
                             <td>{{ d.precio_venta }}</td>
                             <td>{{ d.total_detalle }}</td>

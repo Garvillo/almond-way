@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.contrib import admin
 
-from productos.models import Compra, DetalleCompra, Impuestos
+from productos.models import Compra, DetalleCompra, Impuestos, Producto
 
 
 class DetalleCompraAdmin(admin.TabularInline):
@@ -14,7 +14,7 @@ class CompraAdmin(admin.ModelAdmin):
 
 admin.site.register(Compra, CompraAdmin)
 admin.site.register(Impuestos)
-
+admin.site.register(Producto)
 
 
 

@@ -20,6 +20,7 @@
                     	<h2>{{ producto.kilos }} Kg</h2>
 						<h6><span><h4>{{ producto.descripcion }}</h4></span>
 						{{ producto.variedad }}</h6>
+                        <p><label class="label label-warning">lote: {{ producto.lote | default_if_none:" Sin especificar"}}</label></p>
 
 						<p>
 							<a class="btn btn-default" href="{% url 'productos:detalle_transacciones' producto.pk %}" class="btn">

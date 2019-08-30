@@ -6,6 +6,7 @@ from proveedores.models import Proveedor
 from titulares.models import  Titular
 from agentes.models import Agente
 from clientes.models import Cliente
+from django_extensions.db.models import TimeStampedModel
 
 
 FPAGOS_CHOICES = [
@@ -21,10 +22,11 @@ class Producto(models.Model):
     descripcion = models.CharField(max_length=100, unique=True)
     variedad = models.CharField(max_length=40,blank=True)
     kilos = models.IntegerField(null=True, blank=True, default=0)
+    lote = models.CharField(max_length=40, blank=True, null=True)
 
     def __str__(self):
         #return self.descripcion
-        return "{} ({}Kg)".format(self.descripcion, self.kilos)
+        return self.descripcion
 class Impuestos(models.Model):
 
     nombre = models.CharField(max_length=150)
@@ -37,7 +39,7 @@ class Impuestos(models.Model):
 
 # COMPRA -------------------------------------------------------------------------------
 
-class Compra(models.Model):
+class Compra(TimeStampedModel):
     titular = models.ForeignKey(Titular, on_delete=models.CASCADE)
     proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE)
     agente = models.ForeignKey(Agente, on_delete=models.CASCADE, null=True, blank=True)
@@ -52,6 +54,9 @@ class Compra(models.Model):
     base = models.DecimalField(null=True, blank=True,decimal_places=2, max_digits=12)
     total = models.DecimalField(null=True, blank=True, decimal_places=2, max_digits=12)
 
+    class Meta:
+        ordering = ['-created']
+
     def __str__(self):
         return "{}{} {}".format(self.lfact, str(self.nfact).zfill(5), self.proveedor)
 
@@ -65,6 +70,7 @@ class DetalleCompra(models.Model):
     precio_compra = models.DecimalField(max_digits=7,decimal_places=2)
 
     fecha = models.DateField(auto_now_add=True)
+    lote_heredado = models.CharField(max_length=40, blank=True, null=True)
 
 # VENTAS ----------------------------------------------------------------------------
 
@@ -97,3 +103,18 @@ class DetalleVenta(models.Model):
     precio_venta = models.DecimalField(max_digits=7,decimal_places=2)
 
     fecha = models.DateField(auto_now_add=True)
+    lote_heredado = models.CharField(max_length=40, blank=True, null=True)
+
+class Historico(TimeStampedModel):
+    compra = models.ForeignKey(Compra, on_delete=models.CASCADE, blank=True, null=True)
+    venta = models.ForeignKey(Venta, on_delete=models.CASCADE, blank=True, null=True )
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    cantidad = models.IntegerField()
+    precio_compra = models.DecimalField(max_digits=7,decimal_places=2, null=True, blank=True)
+    precio_venta = models.DecimalField(max_digits=7,decimal_places=2, null=True, blank=True)
+    fecha = models.DateField(null=True, blank=True)
+    lote_heredado = models.CharField(max_length=40, blank=True, null=True)
+    kilos_actuales = models.IntegerField(null=True, blank=True)
+
+    class Meta:
+        ordering = ['-created']

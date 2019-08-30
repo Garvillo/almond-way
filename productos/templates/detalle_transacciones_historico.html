@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block cuerpo %}
-<h2>    {{ compras.0.producto }}  {{ kilos }} Kg </h2>
+<h2>    {{ transacciones.0.producto }}  {{ kilos }} Kg </h2>
 <div class="row">
 	<div class="col-lg-12">
 		<a href=" {% url 'productos:listado_productos' %} class="btn btn-success">
@@ -11,14 +11,16 @@
 <h4> Transacciones en este silo </h4>
 <hr/>
 
-	{% for 	c in compras %}
+	{% for 	t in transacciones %}
+        {% if t.compra  %}
         <div class="row">
                  <div class="col-lg-5 text-right">
 
-                     <a href="{% url 'productos:detalle_compra' c.id %}">
+                     <a href="{% url 'productos:detalle_compra' t.compra.id %}">
                          <span class="btn btn-default btn-sm" style="width:100%;" >
-                            Compra de {{ c.producto }}
-                            <span class="badge" >{{ c.cantidad }}</span> Kg a {{ c.proveedor }}
+                            Compra de {{ t.producto }}
+                            <span class="badge" >{{ t.cantidad }}</span> Kg a {{ t.compra.proveedor }}
+                             {{ t.lote_heredado | default_if_none:"" }}
                         </span>
                      </a>
 
@@ -26,8 +28,8 @@
                 <div class="col-lg-2 text-center">
 
                         <span class="btn btn-primary btn-sm" style="width:100%;">
-                         {{ c.fecha | date:"d M y" }}
-                            <span class="badge"> {{ c.kilos_acumulados }}</span>
+                         {{ t.fecha | date:"d M y" }}
+                            <span class="badge"> {{ t.kilos_actuales }} Kg </span>
 
                         </span>
 
@@ -39,8 +41,8 @@
                 </div>
 
         </div>
-    {% endfor %}
-    {% for 	v in ventas %}
+        {% endif %}
+        {% if t.venta %}
         <div class="row">
                  <div class="col-lg-5 text-right">
 
@@ -50,23 +52,25 @@
                 <div class="col-lg-2 text-center">
 
                         <span class="btn btn-success btn-sm" style="width:100%;">
-                         {{ v.fecha | date:"d M y" }}
-                            <span class="badge"> {{ v.kilos_acumulados }}</span>
+                         {{ t.fecha | date:"d M y" }}
+                            <span class="badge">{{ t.kilos_actuales }} Kg </span>
                         </span>
 
                 </div>
                 <div class="col-lg-5 text-left" >
 
-                       <a href="{% url 'productos:detalle_venta' v.id %}">
+                       <a href="{% url 'productos:detalle_venta' t.venta.id %}">
                          <span class="btn btn-warning btn-sm" style="width:100%;" >
-                            Venta de {{ v.producto }}
-                            <span class="badge" >{{ v.cantidad }}</span> Kg a {{ v.cliente }} {{ v.lote_heredado | default_if_none:"" }}
+                            Venta de {{ t.producto }}
+                            <span class="badge" >{{ t.cantidad }}</span> Kg a {{ t.venta.cliente }}
+                             {{ t.lote_heredado | default_if_none:"" }}
                         </span>
                      </a>
 
                 </div>
 
         </div>
+    {% endif %}
     {% endfor %}
 
 

@@ -8,7 +8,7 @@ class ProductoForm(forms.ModelForm):
 
     class Meta:
         model = Producto
-        fields = ['descripcion', 'variedad']
+        fields = ['descripcion', 'variedad', 'lote']
 
     def __init__(self, *args, **kwargs):
         super(ProductoForm, self).__init__(*args, **kwargs)
@@ -100,7 +100,7 @@ class DetalleVentaForm(forms.ModelForm):
         return cantidad
 
     def clean_precio_compra(self):
-        precio = self.cleaned_data['precio_compra']
+        precio = self.cleaned_data['precio_venta']
         if precio == '':
             raise forms.ValidationError("Debe ingresar un precio valido")
         return precio
