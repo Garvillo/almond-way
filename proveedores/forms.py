@@ -5,7 +5,14 @@ class ProveedorForm(forms.ModelForm):
 
     class Meta:
         model = Proveedor
-        fields = ['ruc', 'razon_social', 'direccion', 'telefono','correo', 'estado','certificado_eco']
+        fields = ['ruc',
+                  'razon_social',
+                  'direccion',
+                  'telefono',
+                  'correo',
+                  'estado',
+                  'entidad_certificadora',
+                  'observaciones_eco']
 
     def __init__(self, *args, **kwargs):
         super(ProveedorForm, self).__init__(*args, **kwargs)

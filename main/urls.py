@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^productos/', include('productos.urls', namespace='productos')),
     url(r'^cliente/', include('clientes.urls', namespace='clientes')),
     url(r'^agente/', include('agentes.urls', namespace='agentes')),
+    url(r'^pagare/', include('pagares.urls', namespace='pagares')),
     url(r'^proveedor/', include('proveedores.urls', namespace='proveedores')),
     url(r'^home', views.home, name='home'),
     url(r'^', views.home, name='home'),

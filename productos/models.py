@@ -7,6 +7,7 @@ from titulares.models import  Titular
 from agentes.models import Agente
 from clientes.models import Cliente
 from django_extensions.db.models import TimeStampedModel
+#from pagares.models import PagareCompra, PagareVenta
 
 
 FPAGOS_CHOICES = [

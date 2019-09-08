@@ -31,13 +31,13 @@
 				<td>{{ proveedor.razon_social }}</td>
 				<td>{{ proveedor.direccion }}</td>
 
-					{% if cliente.certificado_eco %}
-					<td>{{ cliente.certificado_eco }}</td>
+					{% if proveedor.entidad_certificadora %}
+					<td>{{ proveedor.entidad_certificadora }}</td>
 					{% else %}
 					<td>---</td>
 					{% endif %}
 
-					{% if cliente.moroso %}
+					{% if proveedor.moroso %}
 					<td><span class="label label-danger" >SI</span></td>
 					{% else %}
 					<td><span class="label label-success">NO</span></td>

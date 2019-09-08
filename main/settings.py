@@ -15,7 +15,7 @@ SECRET_KEY = '1myv4hp#_-(1wn4xforwk=2q@1tmz^=eq_zwcx2&%x09)hro#$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['rivazo.pythonanywhere.com','127.0.0.1']
+ALLOWED_HOSTS = ['192.168.0.20','127.0.0.1']
 
 
 # Application definition
@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'proveedores',
     'titulares',
     'agentes',
+    'pagares',
 
 
 

@@ -88,7 +88,7 @@ class DetalleTransacciones(DetailView):
                                                               'ventas': detalles_venta_dic,
                                                               'kilos': kilos})
         '''
-        transacciones = Historico.objects.filter(producto=self.object).order_by('-fecha')
+        transacciones = Historico.objects.filter(producto=self.object).order_by('fecha')
 
         return render(request, 'detalle_transacciones_historico.html', {'transacciones': transacciones,
                                                                         'kilos': self.object.kilos})
