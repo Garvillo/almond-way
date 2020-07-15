@@ -30,6 +30,7 @@ urlpatterns = [
     url(r'^agente/', include('agentes.urls', namespace='agentes')),
     url(r'^pagare/', include('pagares.urls', namespace='pagares')),
     url(r'^proveedor/', include('proveedores.urls', namespace='proveedores')),
+    url(r'^api/v1/', include("api.urls")),
     url(r'^home', views.home, name='home'),
     url(r'^', views.home, name='home'),
 ]

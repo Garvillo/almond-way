@@ -34,9 +34,7 @@ INSTALLED_APPS = [
     'titulares',
     'agentes',
     'pagares',
-
-
-
+    'api',
 
 ]
 

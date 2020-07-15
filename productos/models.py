@@ -26,7 +26,6 @@ class Producto(models.Model):
     lote = models.CharField(max_length=40, blank=True, null=True)
 
     def __str__(self):
-        #return self.descripcion
         return self.descripcion
 class Impuestos(models.Model):
 
