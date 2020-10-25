@@ -302,18 +302,32 @@ class CrearCompra(CreateView):
         lineas = {}
         i=1
         for d in detalles:
-            lineas[i] = {'producto': d.producto.variedad,
-                         'cantidad': d.cantidad,
-                         'precio_compra': d.precio_compra,
-                         'lote_heredado': d.lote_heredado
+            detalle_total = d.precio_compra * d.cantidad
+            lineas['linea'+str(i)] = {
+                'producto': d.producto.variedad,
+                'cantidad': d.cantidad,
+                'precio': d.precio_compra,
+                'total': detalle_total,
+                'lote_heredado': d.lote_heredado
                          }
             i= i+1
 
-        orden = Compra.objects.get(pk=form.instance.pk)
+        compra = Compra.objects.get(pk=form.instance.pk)
         context = {
-            'numero': orden.nfact,
-            'fecha': orden.fecha,
-            'forma_pago': orden.forma_pago,
+            'numero': compra.nfact,
+            'fecha': compra.fecha,
+            'forma_pago': compra.forma_pago,
+            'titular_nombre': compra.titular.nombre,
+            'titular_cif': compra.titular.cif,
+            'titular_direccion': compra.titular.direccion,
+            'proveedor_nombre': compra.proveedor.razon_social,
+            'proveedor_ruc': compra.proveedor.ruc,
+            'proveedor_direccion': compra.proveedor.direccion,
+            'proveedor_certificado': compra.proveedor.entidad_certificadora,
+            'base': compra.base,
+            'impuestos':compra.impuestos,
+            'imp_aplicado': compra.imp_aplicado,
+            'total': compra.total,
             'lineas': lineas
         }
         print(context)
