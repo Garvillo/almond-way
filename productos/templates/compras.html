@@ -1,7 +1,32 @@
 {% extends "base.html" %}
 {% block cuerpo %}
-<h3>Facturas de Copmpra</h3>
-<div class="row">
+
+
+<style>
+	.btn-success {
+    color: black;
+    background-color: #5cb85c;
+    border-color: #4cae4c;
+    }
+
+</style>
+
+{% load tag_menu %}
+{% get_titulares as titulares %}
+{% get_impuestos as impuestos %}
+<div class="row text-center">
+{% for tit in titulares %}
+	{% for imp in impuestos %}
+		<a type="button" class="btn btn-success"
+		   href="{% url 'productos:listado_compras_filtradas' tit.pk imp.pk %}" >
+			{{ tit.nombre }}&nbsp;{{ imp.nombre }}
+		</a>
+	{% endfor %}
+{% endfor %}
+	<div>
+
+<div class="row text-left">
+	<h3>Facturas de Copmpra</h3>
 	<div class="col-lg-10">
 		<a href="{% url 'productos:crear_compra' %}" class="btn btn-primary">
 			Crear Factura de Compra

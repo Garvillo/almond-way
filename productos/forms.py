@@ -36,6 +36,9 @@ class CompraForm(forms.ModelForm):
                 'class': 'form-control'
             })
 
+
+
+
 class DetalleCompraForm(forms.ModelForm):
 
     class Meta:

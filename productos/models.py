@@ -115,6 +115,3 @@ class Historico(TimeStampedModel):
     fecha = models.DateField(null=True, blank=True)
     lote_heredado = models.CharField(max_length=40, blank=True, null=True)
     kilos_actuales = models.IntegerField(null=True, blank=True)
-
-    class Meta:
-        ordering = ['-created']

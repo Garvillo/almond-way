@@ -4,7 +4,7 @@ from django.conf.urls import url
 
 from .views import ListadoProductos, CrearProducto, ModificarProducto, DetalleTransacciones
 from .views import CrearCompra, ModificarCompra, ListadoCompras, DetailCompra
-from .views import CrearVenta, ListadoVentas, DetailVenta
+from .views import CrearVenta, ListadoVentas, DetailVenta, ListadoComprasFiltradas
 
 app_name = 'productos'
 
@@ -18,12 +18,13 @@ urlpatterns = [
     url(r'^modificar_compra/(?P<pk>.+)/$',ModificarCompra.as_view(), name="modificar_compra"),
     url(r'^detalle_compra/(?P<pk>.+)/$',DetailCompra.as_view(), name="detalle_compra"),
     url(r'^compras/$', ListadoCompras.as_view(), name="listado_compras"),
+    url(r'^compras_filtradas/(?P<tit>.+)/(?P<imp>.+)/$', ListadoComprasFiltradas.as_view(),
+        name="listado_compras_filtradas"),
 
     url(r'^crear_venta/$', CrearVenta.as_view(), name="crear_venta"),
     #url(r'^modificar_compra/(?P<pk>.+)/$', ModificarCompra.as_view(), name="modificar_compra"),
     url(r'^detalle_venta/(?P<pk>.+)/$', DetailVenta.as_view(), name="detalle_venta"),
     url(r'^ventas/$', ListadoVentas.as_view(), name="listado_ventas"),
-
    # url(r'^imprimir/(?P<pk>.+)/$', Html_to_pdf_view.as_view(), name="imprimir"),
 
 

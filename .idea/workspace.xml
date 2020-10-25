@@ -2,34 +2,36 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ff5da172-1e57-4470-8626-dda448d5fad8" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/productos/templates/detail_venta.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/productos/templates/venta.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/productos/templates/ventas.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/productos/migrations/0022_auto_20201003_2206.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/productos/pdf.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/productos/templates/menu.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/productos/templatetags/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/productos/templatetags/tag_menu.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/titulares/migrations/0003_titular_disponible_para.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/almond-way.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/almond-way.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/templates/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/home.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/productos/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/productos/forms.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/productos/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/productos/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/productos/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/productos/templates/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/productos/templates/detalle_producto.html" beforeDir="false" afterPath="$PROJECT_DIR$/productos/templates/detalle_producto_delete.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/productos/templates/detalle_transacciones.html" beforeDir="false" afterPath="$PROJECT_DIR$/productos/templates/detalle_transacciones.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/productos/templates/productos_listado.html" beforeDir="false" afterPath="$PROJECT_DIR$/productos/templates/productos_listado.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/productos/templates/compras.html" beforeDir="false" afterPath="$PROJECT_DIR$/productos/templates/compras.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/productos/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/productos/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/productos/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/productos/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/titulares/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/titulares/models.py" afterDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>venta</find>
-      <find>proveedor</find>
-      <find>compra</find>
-      <find>modificar_venta</find>
-      <find>detalle_producto</find>
-    </findStrings>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -37,35 +39,30 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/productos/views.py" root0="SKIP_INSPECTION" />
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="10" />
-    <option name="y" value="47" />
-    <option name="width" value="1221" />
-    <option name="height" value="635" />
-  </component>
   <component name="ProjectId" id="1PS7Z7EGoM9lrX8tjkoyQUyZW2m" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="HTML" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/productos/templates" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/productos/templates" />
+      <recent name="$PROJECT_DIR$/api" />
       <recent name="$PROJECT_DIR$/agentes" />
     </key>
   </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
-  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -89,5 +86,16 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="733" y="313" width="430" height="486" key="FileChooserDialogImpl" timestamp="1603616112428">
+      <screen x="0" y="31" width="1920" height="1049" />
+    </state>
+    <state x="733" y="313" width="430" height="486" key="FileChooserDialogImpl/0.31.1920.1049@0.31.1920.1049" timestamp="1603616112428" />
+    <state x="100" y="129" width="1720" height="852" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1603115544876">
+      <screen x="0" y="31" width="1920" height="1049" />
+    </state>
+    <state x="100" y="129" width="1720" height="852" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.31.1920.1049@0.31.1920.1049" timestamp="1603115544876" />
   </component>
 </project>

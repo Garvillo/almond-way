@@ -9,10 +9,36 @@ from .models import Venta, DetalleVenta
 from .models import Historico
 from django.urls import reverse_lazy
 from django.views.generic.detail import DetailView
-from django.http.response import HttpResponseRedirect
+from django.http.response import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 import django.utils.timezone
+
+from django.core.mail import EmailMessage
+from django.utils.safestring import mark_safe
+from django.conf import settings
+from .pdf import PdfRenderer
+from django.core.mail import EmailMessage
+
+from django.template.loader import render_to_string, get_template
+import os
+import xhtml2pdf.pisa as pisa
+import base64
+from django.contrib.staticfiles import finders
+
+class ListadoComprasFiltradas(ListView):
+    model = Compra
+    template_name = 'compras.html'
+    context_object_name = 'compras'
+
+    def get_queryset(self):
+        #mostramos las facturas de este año en orden descendente
+        current_year = django.utils.timezone.now().year
+        print(self)
+        print(self.kwargs['imp'])
+        return Compra.objects.filter(fecha__year = current_year,
+                                     titular = self.kwargs['tit'],
+                                     impuestos = self.kwargs['imp']).order_by('id')
 
 
 class ListadoProductos(ListView):
@@ -269,14 +295,124 @@ class CrearCompra(CreateView):
 
         form.instance.save()
 
+        ############# PDF ###################
+
+        # obtenemos los detalles de esta facuta para crear un nested dict
+        detalles = DetalleCompra.objects.filter(compra = form.instance.pk)
+        lineas = {}
+        i=1
+        for d in detalles:
+            lineas[i] = {'producto': d.producto.variedad,
+                         'cantidad': d.cantidad,
+                         'precio_compra': d.precio_compra,
+                         'lote_heredado': d.lote_heredado
+                         }
+            i= i+1
+
+        orden = Compra.objects.get(pk=form.instance.pk)
+        context = {
+            'numero': orden.nfact,
+            'fecha': orden.fecha,
+            'forma_pago': orden.forma_pago,
+            'lineas': lineas
+        }
+        print(context)
+
+        '''context = {
+            'acta': qsacta,
+            'laboratorio': qslaboratorio,
+            'muestreo': qsmuestreo,
+            'pk': pk,
+            'tipo': tipo
+        }'''
+
+
+        template_path = 'plantilla_email.html'
+        template = get_template(template_path)
+        # html = template.render(form.instance.__dict__)
+        html = template.render(context)
+        # print(form.instance.__dict__)
+
+        ## definir los datos del diccionario, este no sirve
+        ## hacer bien los estilos, los de boostrap no funcionan
+        ## los estilos que soporta estan bastante limitados
+        ## https://xhtml2pdf.readthedocs.io/en/latest/reference.html#supported-css-properties
+
+        ndocumento1 = "factura" + str(form.instance.nfact) + ".pdf"
+        #ddocumento = os.path.join(settings.MEDIA_ROOT, ndocumento1)
+        ddocumento = ndocumento1
+        outFilename = ddocumento
+        outFile = open(outFilename.encode("utf-8"), "w+b")
+        pisaStatus = pisa.CreatePDF(html.encode('utf-8'), dest=outFile, encoding='utf-8')
+        outFile.close()
+        ndocumento = ddocumento
+        # ddocumento = os.path.join(settings.MEDIA_ROOT, ndocumento)
+        leerdocumento = open(ddocumento.encode("utf-8"), "rb").read()
+
+        ############### EMAIL ##################33
+
+        b = base64.b64encode(leerdocumento).decode("utf-8", "ignore")
+
+        nombredocumento = "factura" + str(form.instance.nfact) + ".pdf"
+        email = "aurelio@syscomed.es"
+        asunto = "Factura de compra"
+        cuerpo = "Buenos dias, adjuntamos factura de compra"
+        body = cuerpo
+        # Replace this texto in plantilla cuerpo
+        body_content = mark_safe(body)
+        html_content = mark_safe(body_content)
+        remitente = settings.EMAIL_HOST_USER
+        destinatario = email
+        try:
+            msg = EmailMessage(asunto, html_content, remitente, [destinatario])
+            msg.attach(nombredocumento, leerdocumento, "application/pdf")
+            msg.content_subtype = "pdf"  # Main content is now text/html
+            msg.encoding = 'utf-8'
+            msg.send()
+            print("mensaje enviado ")
+        except Exception as e:
+            print("no se ha podido enviar ", e)
+
         return HttpResponseRedirect(self.success_url)
 
     def form_invalid(self, form, detalle_compra_form_set):
         return self.render_to_response(self.get_context_data(form=form, detalle_compra_form_set = detalle_compra_form_set))
 
 
+def link_callback(uri, rel):
+    """
+    Convert HTML URIs to absolute system paths so xhtml2pdf can access those
+    resources
+    """
 
-# factura de compra
+    result = finders.find(uri)
+
+    if result:
+        if not isinstance(result, (list, tuple)):
+            result = [result]
+        result = list(os.path.realpath(path) for path in result)
+        path = result[0]
+    else:
+        sUrl = settings.STATIC_URL  # Typically /static/
+        sRoot = settings.STATIC_ROOT  # Typically /home/userX/project_static/
+        mUrl = settings.MEDIA_URL  # Typically /media/
+        mRoot = settings.MEDIA_ROOT  # Typically /home/userX/project_static/media/
+        if uri.startswith(mUrl):
+            path = os.path.join(mRoot, uri.replace(mUrl, ""))
+        elif uri.startswith(sUrl):
+            path = os.path.join(sRoot, uri.replace(sUrl, ""))
+        else:
+            return uri
+    # make sure that file exists
+    if not os.path.isfile(path):
+        raise Exception(
+            'media URI must start with %s or %s' % (sUrl, mUrl)
+        )
+    return path
+
+
+
+# Vista detalle de factura de compra
 class DetailCompra(DetailView):
     model = Compra
     #template_name = 'detalle_producto.html'
@@ -313,6 +449,46 @@ class DetailCompra(DetailView):
 
         return render(request, 'detail_compra.html', {'detalles': detalles_data, 'compra': compra})
 
+
+
+class DetailCompraPdf(DetailView):
+    model = Compra
+    #template_name = 'detalle_producto.html'
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        print("-"*10)
+        print(self.object.base)
+        print(self.object.numero)
+        #form_class = self.get_form_class()
+        #form = self.get_form(form_class)
+        #todos los detalles de compra para este producto/silo
+        compra = self.object
+
+        detalles = DetalleCompra.objects.filter(compra=self.object).order_by('pk')
+        detalles_data = []
+        kilos=0
+        for detalle in detalles:
+
+            kilos += detalle.cantidad
+            d = {'producto': detalle.producto,
+                 'cantidad': detalle.cantidad,
+                 'precio_compra': detalle.precio_compra,
+                 'total_detalle': (detalle.precio_compra * detalle.cantidad)
+
+                 #'id': detalle.compra.pk,
+                 #'fecha': detalle.fecha,
+                 #'proveedor': detalle.compra.proveedor,
+                 #'kilos_acumulados': kilos
+                 }
+            detalles_data.append(d)
+
+
+        #return self.render_to_response(self.get_context_data(form=form, detalle_compra_form_set=detalle_compra_form_set))
+
+        # return render(request, 'detail_compra.html', {'detalles': detalles_data, 'compra': compra})
+        contexto= detalles_data + compra
+        print("contexto", contexto)
+        return contexto
 # -----------------------------  ventas  ---------------------------------
 
 
