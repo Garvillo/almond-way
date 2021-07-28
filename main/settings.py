@@ -115,10 +115,10 @@ USE_TZ = True
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.mail.eu-west-1.awsapps.com'
+EMAIL_HOST = '**************************'
 EMAIL_PORT = 465
-EMAIL_HOST_USER = 'desarrollo@syscomed.es'
-EMAIL_HOST_PASSWORD = 'Syscomed_19'
+EMAIL_HOST_USER = '***************'
+EMAIL_HOST_PASSWORD = '**************'
 EMAIL_USE_SSL = True
 
 # Static files (CSS, JavaScript, Images)
